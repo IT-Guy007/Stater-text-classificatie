@@ -1,0 +1,6 @@
+rm -rf /var/www/html/*
+rm /etc/apache2/sites-available/000-default.conf
+rm /etc/apache2/sites-available/default-ssl.conf
+a2dissite 000-default.conf
+
+a2enmod rewrite

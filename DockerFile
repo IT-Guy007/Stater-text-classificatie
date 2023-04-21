@@ -1,0 +1,10 @@
+FROM ubuntu/apache2 
+
+COPY script /var
+RUN chmod +x /var/script
+RUN /var/script
+
+COPY /src/html /var/www/html
+
+RUN service apache2 restart
+EXPOSE 80
