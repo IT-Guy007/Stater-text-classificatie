@@ -160,3 +160,5 @@ cython_debug/
 .idea/
 .DS_Store
 development/StaterData.db
+development/rf_model 40%.joblib
+development/rf_model 50%.joblib
