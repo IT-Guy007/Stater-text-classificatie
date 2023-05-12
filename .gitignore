@@ -162,3 +162,4 @@ cython_debug/
 development/StaterData.db
 development/rf_model 40%.joblib
 development/rf_model 50%.joblib
+development/rf_model 70%.joblib
