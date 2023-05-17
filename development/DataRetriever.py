@@ -30,7 +30,7 @@ dtypes = {'Date received': str,
           'Consumer disputed?': str,
           'Complaint ID': int}
 
-DS1_data = pd.read_csv(url, low_memory=False, dtype=dtypes, parse_dates=parse_dates,date_format="mixed")
+DS1_data = pd.read_csv(url, low_memory=False, dtype=dtypes, parse_dates=parse_dates)
 DS1_data[['Timely response?', 'Consumer disputed?']] = DS1_data[['Consumer disputed?', 'Timely response?']].replace(
     {'Yes': True, 'No': False}).astype(bool)
 DS1_data['Consumer consent provided?'] = DS1_data['Consumer consent provided?'].replace(
