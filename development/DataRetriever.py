@@ -1,9 +1,18 @@
 # Imports
 import pandas as pd
 import sqlalchemy
+import datetime
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
+# get the date of yesterday
+yesterday = datetime.date.today() - datetime.timedelta(days=1)
+yesterday_str = yesterday.strftime('%Y-%m-%d')
+date_formats = ['%Y-%m-%d', '%m/%d/%Y']
 
 # Defining constants
-url = 'https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?date_received_max=2023-04-24&date_received_min=2011-12-01&field=all&format=csv&lens=product&no_aggs=true&product=Mortgage&size=375533&sub_lens=sub_product&trend_depth=5&trend_interval=month'
+url = f'https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?date_received_max={yesterday_str}&date_received_min=2011-12-01&field=all&format=csv&lens=product&no_aggs=true&product=Mortgage&size=375533&sub_lens=sub_product&trend_depth=5&trend_interval=month'
 parse_dates = ['Date received', 'Date sent to company']
 dtypes = {'Date received': str,
           'Product': "category",
@@ -41,5 +50,5 @@ print("Data cleaned")
 db = sqlalchemy.create_engine('sqlite:///StaterData.db')
 print("Exporting to database")
 DS1_data.to_sql("mortgage complaints",db,if_exists="replace")
-print("Done!")
+print(f"Done, created database with {len(DS1_data)} rows")
 
