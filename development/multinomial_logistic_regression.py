@@ -29,29 +29,27 @@ nltk.download('omw-1.4')
 # constants
 conn = sqlite3.connect('StaterData.db')
 query = "SELECT * FROM 'mortgage complaints'"
-dtypes = {'Date received': str,
-          'Product': "category",
-          'Sub-product': "category",
-          'Issue': "category",
-          'Sub-issue':"category",
-          'Consumer complaint narrative':str,
-          'Company public response':str,
-          'Company':"category",
-          'State':"category",
-          'ZIP code':str,
-          'Tags':"category",
-          'Consumer consent provided?':str,
-          'Submitted via':"category",
-          'Date sent to company':str,
-          'Company response to consumer':str,
-          'Timely response?':str,
-          'Consumer disputed?':str,
-          'Complaint ID':int
-          }
-
-data = pd.read_sql_query(query, conn, dtype=dtypes)
-print("data loaded")
-df = data[['Consumer complaint narrative', 'Issue']].copy()
+dtypes = {
+    'Date received': str,
+    'Product': "category",
+    'Sub-product': "category",
+    'Issue': "category",
+    'Sub-issue':"category",
+    'Consumer complaint narrative':str,
+    'Company public response':str,
+    'Company':"category",
+    'State':"category",
+    'ZIP code':str,
+    'Tags':"category",
+    'Consumer consent provided?':str,
+    'Submitted via':"category",
+    'Date sent to company':str,
+    'Company response to consumer':str,
+    'Timely response?':str,
+    'Consumer disputed?':str,
+    'Complaint ID':int,
+    'Clean consumer complaint':str,
+}
 
 # remove stopwords and return the text
 def remove_stopwords(text):
@@ -147,7 +145,6 @@ def clean_complaints(df_column):
             cleaned_complaints.append(complaint)
         clean_complaints_df = pd.DataFrame(cleaned_complaints, columns=[df_column.name])
         cleaned_complaints_df = pd.concat([cleaned_complaints_df, clean_complaints_df], axis=0)
-        print(cleaned_complaints_df.info())
         batch_index += 1
         del complaints
         del complaint
@@ -155,12 +152,19 @@ def clean_complaints(df_column):
         del clean_complaints_df
     return cleaned_complaints_df[df_column.name]
 
-print("cleaning text")
-df['Cleaned consumer complaint'] = clean_complaints(df['Consumer complaint narrative']).reset_index(drop=True)
-print(df.info())
+# # load data and clean complaint narrative
+# data = pd.read_sql_query(query, conn, dtype=dtypes)
+# df = data[['Consumer complaint narrative', 'Issue']].copy()
+# print("data loaded")
+# print("cleaning text")
+# df['Cleaned consumer complaint'] = clean_complaints(df['Consumer complaint narrative']).reset_index(drop=True)
+
+data = pd.read_csv('cleaned_complaints.csv', dtype=dtypes)
+df = data[['Clean consumer complaint', 'Issue']].copy()
+print("data loaded")
 
 # get the independent and dependent variables as x and y
-x = df['Cleaned consumer complaint']
+x = df['Clean consumer complaint']
 y = df['Issue']
 # get all categories of y for the results
 cat_issue = y.cat.categories
@@ -168,24 +172,24 @@ cat_issue = y.cat.categories
 print("splitting data into train and test sets")
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=2)
 
-# vectorize text of x
-print("vectorizing text")
-vectorizer = TfidfVectorizer(stop_words="english", max_features=1000)
-X_train = vectorizer.fit_transform(X_train)
-X_test = vectorizer.transform(X_test)
+print("vectorize text")
+vectorizer = TfidfVectorizer(stop_words='english', token_pattern=r'\b[a-zA-Z]+\b')
+
+X_train_tfidf = vectorizer.fit_transform(X_train)
+X_test_tfidf = vectorizer.transform(X_test)
 
 # multinomial logistic regression
 print("creating model")
 logregression = LogisticRegression(n_jobs=4, solver='saga', multi_class='multinomial', max_iter=1000)
 
 print("fitting model")
-logregression.fit(X_train, y_train)
+logregression.fit(X_train_tfidf, y_train)
 
 print("predicting test data")
-y_pred = logregression.predict(X_test)
+y_pred = logregression.predict(X_test_tfidf)
 
 # print scores
-print(f"score:{logregression.score(X_test, y_test)}")
+print(f"score:{logregression.score(X_test_tfidf, y_test)}")
 print(f"accuracy:{accuracy_score(y_test, y_pred)}")
 print(f"f1 score:{f1_score(y_test, y_pred, average='weighted')}")
 
