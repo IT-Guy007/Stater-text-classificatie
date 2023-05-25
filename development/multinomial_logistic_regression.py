@@ -15,7 +15,7 @@ import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, classification_report
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 # stopwords
 nltk.download('stopwords')
@@ -135,7 +135,6 @@ def clean_complaints(df_column):
     batch_size = 10000
     batch_index = 0
     number_of_batches = math.ceil(len(df_column) / batch_size)
-    # number_of_batches = 2
     while batch_index < number_of_batches:
         print(f"batch {batch_index+1} of {number_of_batches}")
         cleaned_complaints = []
@@ -160,8 +159,12 @@ def clean_complaints(df_column):
 # df['Cleaned consumer complaint'] = clean_complaints(df['Consumer complaint narrative']).reset_index(drop=True)
 
 data = pd.read_csv('cleaned_complaints.csv', dtype=dtypes)
+print(data.head())
+print(data.info())
 df = data[['Clean consumer complaint', 'Issue']].copy()
 print("data loaded")
+print(df.shape)
+
 
 # get the independent and dependent variables as x and y
 x = df['Clean consumer complaint']
@@ -180,7 +183,7 @@ X_test_tfidf = vectorizer.transform(X_test)
 
 # multinomial logistic regression
 print("creating model")
-logregression = LogisticRegression(n_jobs=4, solver='saga', multi_class='multinomial', max_iter=1000)
+logregression = LogisticRegression(n_jobs=4, solver='saga', multi_class='multinomial', max_iter=1000, random_state=2)
 
 print("fitting model")
 logregression.fit(X_train_tfidf, y_train)
@@ -213,3 +216,17 @@ print('Predicted issue:', issue_pred[0])
 print("saving model")
 joblib.dump(logregression, 'logregression_model.joblib')
 joblib.dump(vectorizer, 'vectorizer.joblib')
+
+print("creating gridsearch")
+param_grid = {
+    'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    'solver': ['sag', 'saga'],
+    'max_iter': [100, 1000, 2500, 5000],
+    'penalty': ['l1', 'l2', 'elasticnet', None]
+}
+model = LogisticRegression(multi_class='multinomial', n_jobs=4, random_state=2)
+grid = GridSearchCV(model, param_grid, verbose=3)
+grid.fit(X_train_tfidf, y_train)
+print(grid.best_params_)
+print(grid.best_estimator_)
+print(grid.best_score_)
