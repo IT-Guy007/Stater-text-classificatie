@@ -1,5 +1,4 @@
 # imports
-import math
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -57,39 +56,39 @@ def remove_stopwords(text):
     return " ".join([token for token in nltk.word_tokenize(text) if token.lower() not in stop_words])
 
 def clean_text(text):
-    # Remove numerical values
+    # remove numerical values
     text = re.sub(r'\d+', '', text)
 
-    # Remove punctuation marks
+    # remove punctuation marks
     text = re.sub(r'[^\w\s]', '', text)
 
-    # Remove links and URLs
+    # remove links and URLs
     text = re.sub(r'http\S+', '', text)
 
-    # Remove leading/trailing white space and convert to lowercase
+    # remove leading/trailing white space and convert to lowercase
     text = text.strip().lower()
 
     return text
 
 # lemmitize the word based on its part of speech (POS) tag
 def lemmatize_word(word, tag, lemmatizer):
-    # Map POS tag to WordNet POS tag
+    # map POS tag to WordNet POS tag
     if tag.startswith('J'):
-        # Adjective
+        # adjective
         wn_tag = 'a'
     elif tag.startswith('V'):
-        # Verb
+        # verb
         wn_tag = 'v'
     elif tag.startswith('N'):
-        # Noun
+        # noun
         wn_tag = 'n'
     elif tag.startswith('R'):
-        # Adverb
+        # adverb
         wn_tag = 'r'
     else:
         wn_tag = None
 
-    # Lemmatize the word
+    # lemmatize the word
     if wn_tag:
         lemma = lemmatizer.lemmatize(word, wn_tag)
     else:
@@ -99,13 +98,13 @@ def lemmatize_word(word, tag, lemmatizer):
 
 # lemmatize the sentence that is already tokenized
 def lemmatize_sentence(lemmatizer, tokens):
-    # Part-of-speech (POS) tag each word
+    # part-of-speech (POS) tag each word
     pos_tags = nltk.pos_tag(tokens)
 
-    # Lemmatize each word based on its POS tag
+    # lemmatize each word based on its POS tag
     lemmas = [lemmatize_word(word, tag, lemmatizer) for word, tag in pos_tags]
 
-    # Join the lemmas back into a sentence
+    # join the lemmas back into a sentence
     lemmatized_sentence = ' '.join(lemmas)
 
     return lemmatized_sentence
@@ -122,48 +121,28 @@ def clean_complaint(complaint):
         lemmatizer = WordNetLemmatizer()
         cleaned_complaint = remove_stopwords(complaint)
         cleaned_complaint = clean_text(cleaned_complaint)
-        # Tokenize the sentence into words
+        # tokenize the sentence into words
         tokens = nltk.word_tokenize(cleaned_complaint)
         cleaned_complaint = lemmatize_sentence(lemmatizer, tokens)
         tokenized_complaint = word_tokenize(cleaned_complaint)
         cleaned_complaint = remove_non_alphabetica_char_and_x(tokenized_complaint)
         return cleaned_complaint
 
-# one for loop in batches to, remove stopwords, clean text, lemmatize, tokenize, and remove x or non alphabetic characters
-def clean_complaints(df_column):
-    cleaned_complaints_df = pd.DataFrame(columns=[df_column.name])
-    batch_size = 10000
-    batch_index = 0
-    number_of_batches = math.ceil(len(df_column) / batch_size)
-    while batch_index < number_of_batches:
-        print(f"batch {batch_index+1} of {number_of_batches}")
-        cleaned_complaints = []
-        complaints = df_column[batch_index * batch_size: (batch_index + 1) * batch_size]
-        for complaint in complaints:
-            complaint = clean_complaint(complaint)
-            cleaned_complaints.append(complaint)
-        clean_complaints_df = pd.DataFrame(cleaned_complaints, columns=[df_column.name])
-        cleaned_complaints_df = pd.concat([cleaned_complaints_df, clean_complaints_df], axis=0)
-        batch_index += 1
-        del complaints
-        del complaint
-        del cleaned_complaints
-        del clean_complaints_df
-    return cleaned_complaints_df[df_column.name]
+# load data and clean complaint narrative
+print("load data")
+data = pd.read_sql_query(query, conn, dtype=dtypes)
+df = data[['Consumer complaint narrative', 'Issue']].copy()
 
-# # load data and clean complaint narrative
-# data = pd.read_sql_query(query, conn, dtype=dtypes)
-# df = data[['Consumer complaint narrative', 'Issue']].copy()
+print("clean text")
+df['Clean consumer complaint'] = df['Consumer complaint narrative'].copy()
+df['Clean consumer complaint'] = df['Clean consumer complaint'].apply(lambda x: clean_complaint(x))
+
+# data = pd.read_csv('cleaned_complaints.csv', dtype=dtypes)
+# print(data.head())
+# print(data.info())
+# df = data[['Clean consumer complaint', 'Issue']].copy()
 # print("data loaded")
-# print("cleaning text")
-# df['Cleaned consumer complaint'] = clean_complaints(df['Consumer complaint narrative']).reset_index(drop=True)
-
-data = pd.read_csv('cleaned_complaints.csv', dtype=dtypes)
-print(data.head())
-print(data.info())
-df = data[['Clean consumer complaint', 'Issue']].copy()
-print("data loaded")
-print(df.shape)
+# print(df.shape)
 
 
 # get the independent and dependent variables as x and y
@@ -217,16 +196,16 @@ print("saving model")
 joblib.dump(logregression, 'logregression_model.joblib')
 joblib.dump(vectorizer, 'vectorizer.joblib')
 
-print("creating gridsearch")
-param_grid = {
-    'C': [0.001, 0.01, 0.1, 1, 10, 100],
-    'solver': ['sag', 'saga'],
-    'max_iter': [100, 1000, 2500, 5000],
-    'penalty': ['l1', 'l2', 'elasticnet', None]
-}
-model = LogisticRegression(multi_class='multinomial', n_jobs=4, random_state=2)
-grid = GridSearchCV(model, param_grid, verbose=3)
-grid.fit(X_train_tfidf, y_train)
-print(grid.best_params_)
-print(grid.best_estimator_)
-print(grid.best_score_)
+# print("creating gridsearch")
+# param_grid = {
+#     'C': [0.001, 0.01, 0.1, 1, 10, 100],
+#     'solver': ['sag', 'saga'],
+#     'max_iter': [100, 1000, 2500, 5000],
+#     'penalty': ['l1', 'l2', 'elasticnet', None]
+# }
+# model = LogisticRegression(multi_class='multinomial', n_jobs=4, random_state=2)
+# clf = GridSearchCV(model, param_grid, verbose=3)
+# clf.fit(X_train_tfidf, y_train)
+# print(clf.best_params_)
+# print(clf.best_estimator_)
+# print(clf.best_score_)
