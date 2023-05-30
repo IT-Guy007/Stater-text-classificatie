@@ -1,6 +1,10 @@
 import pandas as pd
 import datetime
 import sqlalchemy
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
 # get the date of yesterday
 yesterday = datetime.date.today() - datetime.timedelta(days=1)
 yesterday_str = yesterday.strftime('%Y-%m-%d')
