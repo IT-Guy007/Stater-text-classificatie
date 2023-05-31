@@ -7,8 +7,6 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import re
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-
 # Stopwords
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -128,11 +126,7 @@ df = data.copy()
 # Clean consumer complaint
 df['Clean consumer complaint'] = df['Consumer complaint narrative'].apply(lambda x: clean_complaint(x))
 
-# Vectorize consumer complaint
-vectorizer = TfidfVectorizer(stop_words='english', token_pattern=r'\b[a-zA-Z]+\b')
-df['Vectorized complaint'] = vectorizer.fit_transform(df['Clean consumer complaint'])
-# Subselect columns of df
-df = df[['Complaint ID', 'Issue', 'Consumer complaint narrative', 'Vectorized complaint']]
+df = df[['Complaint ID', 'Issue', 'Consumer complaint narrative', 'Clean consumer complaint']]
 
 # Save data in csv
 df.to_csv('StaterData.csv', index=False)
