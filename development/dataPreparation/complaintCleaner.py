@@ -4,7 +4,6 @@ import sqlite3
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
 import re
 
 # Stopwords
@@ -63,6 +62,8 @@ def clean_text(text):
 
 # Lemmitize the word based on its part of speech (POS) tag
 def lemmatize_word(word, tag, lemmatizer):
+    wn_tag = None
+
     # Map POS tag to WordNet POS tag
     if tag.startswith('J'):
         # Adjective
@@ -76,8 +77,6 @@ def lemmatize_word(word, tag, lemmatizer):
     elif tag.startswith('R'):
         # Adverb
         wn_tag = 'r'
-    else:
-        wn_tag = None
 
     # Lemmatize the word
     if wn_tag:
@@ -88,7 +87,12 @@ def lemmatize_word(word, tag, lemmatizer):
     return lemma
 
 # Lemmatize the sentence that is already tokenized
-def lemmatize_sentence(lemmatizer, tokens):
+def lemmatize_sentence(text):
+    lemmatizer = WordNetLemmatizer()
+
+    # Tokenize the sentence into words
+    tokens = nltk.word_tokenize(text)
+
     # Part-of-speech (POS) tag each word
     pos_tags = nltk.pos_tag(tokens)
 
@@ -101,23 +105,21 @@ def lemmatize_sentence(lemmatizer, tokens):
     return lemmatized_sentence
 
 def remove_non_alphabetica_char_and_x(text):
+    tokenized_text = nltk.word_tokenize(text)
+
     # Remove non alphabetical characters
-    alphabetical_text = [re.sub('[^a-zA-Z]+', '', word) for word in text]
+    alphabetical_text = [re.sub('[^a-zA-Z]+', '', word) for word in tokenized_text]
 
     # Remove x from the text with regex
     alphabetical_text = [word for word in alphabetical_text if not re.match('^x+$', word)]
     return ' '.join(alphabetical_text)
 
 def clean_complaint(complaint):
-        lemmatizer = WordNetLemmatizer()
-        cleaned_complaint = remove_stopwords(complaint)
-        cleaned_complaint = clean_text(cleaned_complaint)
-        # Tokenize the sentence into words
-        tokens = nltk.word_tokenize(cleaned_complaint)
-        cleaned_complaint = lemmatize_sentence(lemmatizer, tokens)
-        tokenized_complaint = word_tokenize(cleaned_complaint)
-        cleaned_complaint = remove_non_alphabetica_char_and_x(tokenized_complaint)
-        return cleaned_complaint
+    cleaned_complaint = remove_stopwords(complaint)
+    cleaned_complaint = clean_text(cleaned_complaint)
+    cleaned_complaint = lemmatize_sentence(cleaned_complaint)
+    cleaned_complaint = remove_non_alphabetica_char_and_x(cleaned_complaint)
+    return cleaned_complaint
 
 # Read data
 data = pd.read_sql_query(query, conn, dtype=dtypes)
