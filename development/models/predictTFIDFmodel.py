@@ -146,12 +146,23 @@ def Classifiy_string(user_input):
 
     # Count the occurrences of each issue and get the most common one, as long as there are words left
     value_counts = filtered_df["Issue"].value_counts()
+    
+    # Concatenate the 'IssueCountNormalized' and 'value_counts' dataframes along the columns axis
     NormalizedTable = pd.concat([IssueCountNormalized, value_counts], axis=1, keys=('perc', 'valuecount'))
+
+    # Calculate the 'Endscores' by dividing the 'valuecount' column by the 'perc' column in 'NormalizedTable'
     Endscores = NormalizedTable.valuecount / NormalizedTable.perc
+
+    # Assign the calculated 'Endscores' as a new column in 'NormalizedTable'
     NormalizedTable["Endscores"] = Endscores
+
+    # Create a new column in 'NormalizedTable' containing the keys from 'IssueCountNormalized' converted to a list
     NormalizedTable["IssueName"] = IssueCountNormalized.keys().tolist()
 
+    # Locate the row in 'NormalizedTable' with the maximum value in the 'Endscores' column
     Toprow = NormalizedTable.loc[NormalizedTable['Endscores'].idxmax()]
+
+    # Return the value in the 'IssueName' column of the row with the highest 'Endscores' value
     return Toprow.IssueName
 
 print("Your question will be in the following category: "+Classifiy_string(input("What question do you want to categorize? ")))
