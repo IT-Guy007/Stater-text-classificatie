@@ -89,7 +89,7 @@ Vectorized_Data = vectorizer.fit_transform(DS1_data['Consumer complaint narrativ
 
 
 # === Bard modeling ===
-#palm.configure(api_key='AIzaSyDl-GxBo7WsAQiw99q5yKACHkQ7c-ysIQ8')
+#palm.configure(api_key='<api-Key>')
 #models = [m for m in palm.list_models() if 'embedText' in m.supported_generation_methods]
 
 #model = models[0]
