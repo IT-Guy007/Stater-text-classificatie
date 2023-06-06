@@ -163,3 +163,4 @@ development/StaterData.db
 development/df_test.joblib
 development/df_train.joblib
 development/prompt.txt
+development/models/StaterData.csv

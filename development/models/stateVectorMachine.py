@@ -9,10 +9,10 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
 
 # load data
-data = pd.read_csv("development/StaterData.csv")
+data = pd.read_csv("StaterData.csv")
 
 # split data
-train_data, test_data, train_labels, test_labels = train_test_split(data['Vectorized complaints'], data['Issue'], test_size=0.1)
+train_data, test_data, train_labels, test_labels = train_test_split(data['Clean consumer complaint'], data['Issue'], test_size=0.1, random_state=2)
 
 # vectorize data
 vectorizer = TfidfVectorizer(
