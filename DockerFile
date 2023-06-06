@@ -1,10 +1,23 @@
-FROM ubuntu/apache2 
+FROM python:3.10.2-slim-bullseye
 
-COPY script /var
-RUN chmod +x /var/script
-RUN /var/script
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY /src/html /var/www/html
+WORKDIR /code
 
-RUN service apache2 restart
-EXPOSE 80
+COPY ./requirements.txt .
+
+RUN apt-get update -y && \
+    apt-get install -y netcat && \
+    apt-get install -y nodejs && \
+    apt-get install -y npm && \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+COPY ./entrypoint.sh .
+RUN chmod +x /code/entrypoint.sh
+
+COPY . .
+
+ENTRYPOINT ["/code/entrypoint.sh"]
