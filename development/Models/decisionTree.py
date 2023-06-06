@@ -31,7 +31,7 @@ X_test = vectorizer.transform(X_test)
 feature_names = vectorizer.get_feature_names_out()
 class_names = df['Issue']
 
-#Gridsearch Define the parameter grid
+# Gridsearch Define the parameter grid
 best_params = {
     'criterion': 'gini',
     'max_depth': 14,
