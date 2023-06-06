@@ -1,15 +1,9 @@
 import pandas as pd
 import datetime
 import sqlalchemy
-import ssl
-
-ssl._create_default_https_context = ssl._create_unverified_context
-
 # get the date of yesterday
 yesterday = datetime.date.today() - datetime.timedelta(days=1)
 yesterday_str = yesterday.strftime('%Y-%m-%d')
-
-date_formats = ['%Y-%m-%d', '%m/%d/%Y']
 
 # create the URL with the date of yesterday
 url = f'https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?date_received_max={yesterday_str}&date_received_min=2011-12-01&field=all&format=csv&lens=product&no_aggs=true&product=Mortgage&size=375533&sub_lens=sub_product&trend_depth=5&trend_interval=month'
@@ -34,7 +28,7 @@ dtypes = {'Date received': str,
           'Consumer disputed?': str,
           'Complaint ID': int}
 
-DS1_data = pd.read_csv(url, low_memory=False, dtype=dtypes, parse_dates=parse_dates,date_format="mixed")
+DS1_data = pd.read_csv(url, low_memory=False, dtype=dtypes, parse_dates=parse_dates)
 DS1_data[['Timely response?', 'Consumer disputed?']] = DS1_data[['Consumer disputed?', 'Timely response?']].replace(
     {'Yes': True, 'No': False}).astype(bool)
 DS1_data['Consumer consent provided?'] = DS1_data['Consumer consent provided?'].replace(
