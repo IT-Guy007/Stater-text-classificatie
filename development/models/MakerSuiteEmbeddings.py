@@ -28,7 +28,7 @@ gpu = len(tf.config.list_physical_devices('GPU'))>0
 print("GPU is", "available" if gpu else "NOT AVAILABLE")
 
 # Select the right model
-palm.configure(api_key='AIzaSyDl-GxBo7WsAQiw99q5yKACHkQ7c-ysIQ8')
+palm.configure(api_key='<>')
 models = [m for m in palm.list_models() if 'embedText' in m.supported_generation_methods]
 model = models[0]
 
