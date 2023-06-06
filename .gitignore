@@ -162,3 +162,5 @@ cython_debug/
 
 development/dataPreparation/StaterData.db
 development/dataPreparation/StaterData.csv
+development/StaterData.db
+development/models/StaterData.csv'
