@@ -17,21 +17,11 @@ from googletrans import Translator, constants
 
 import google.generativeai as palm
 from google.api_core import retry
-#from tqdm.auto import tqdm
-#from keras import layers
-#import sys
-#import platform
-#import sklearn as sk
-#import tensorflow as tf
-#import keras
-#import re
-#import tqdm
-
 
 translator = Translator()
 
 # Create a Random Forest model
-rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model = RandomForestClassifier(random_state=42)
 
 param_grid = {
     'n_estimators': 200,
@@ -154,13 +144,13 @@ class ChatConsumer(WebsocketConsumer):
         prediction = rf_model.predict(list(score.toarray()))
         #prediction = rf_model.predict(list((np.array(predictiondataset)).reshape(1, -1)))
 
-        prediction_nl = translator.translate("Your question belongs to the: " + prediction[0] + " category", dest=translation.src)
+        prediction_Translated = translator.translate("Your question belongs to the: " + prediction[0] + " category", dest=translation.src)
 
         async_to_sync(self.channel_layer.send)(
             self.channel_name,
             {
                 "type": "chat_message",
-                "text": {"msg": prediction_nl.text, "source": "bot"},
+                "text": {"msg": prediction_Translated.text, "source": "bot"},
             },
         )
 
