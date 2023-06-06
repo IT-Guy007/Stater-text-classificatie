@@ -1,17 +1,12 @@
 # Imports
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 
-from sklearn.tree import plot_tree
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
+
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import f1_score
+
 
 # Read csv, StaterData
 df = pd.read_csv('/Users/laurensheberle/Github/StaterData.csv')
