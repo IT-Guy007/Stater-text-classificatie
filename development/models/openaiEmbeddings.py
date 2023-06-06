@@ -3,7 +3,6 @@ import time
 import openai
 import json
 import numpy as np
-from openai.embeddings_utils import get_embedding
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -32,7 +31,7 @@ def get_embedding(text, model="text-embedding-ada-002"):
 data['Embedding'] = data['Consumer complaint narrative'].apply(lambda x: get_embedding(x))
 data.to_csv("StaterDataEmbeddings.csv", index=False)
 
-data = pd.read_csv("StaterDataEmbeddings.csv")
+data = pd.read_csv("dataPreparation/StaterDataEmbeddings.csv")
 
 # Prepare the feature matrix X and target vector y
 X = data["Embedding"].apply(lambda x: json.loads(x)).tolist()
