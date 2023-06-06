@@ -30,13 +30,11 @@ print("GPU is", "available" if gpu else "NOT AVAILABLE")
 # Select the right model
 palm.configure(api_key='AIzaSyDl-GxBo7WsAQiw99q5yKACHkQ7c-ysIQ8')
 models = [m for m in palm.list_models() if 'embedText' in m.supported_generation_methods]
-
 model = models[0]
 
 # Import the data, and spit the data
 data = pd.read_csv("StaterData.csv")
 df_train, df_test = train_test_split(data, test_size=0.3, random_state=2)
-
 
 # Python progress bar 
 tqdm.pandas()
@@ -75,7 +73,6 @@ classifier.summary()
 classifier.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                    optimizer = keras.optimizers.Adam(learning_rate=0.001),
                    metrics=['accuracy'])
-
 
 # Tensorflow model training
 
