@@ -5,8 +5,6 @@ import sqlalchemy
 yesterday = datetime.date.today() - datetime.timedelta(days=1)
 yesterday_str = yesterday.strftime('%Y-%m-%d')
 
-date_formats = ['%Y-%m-%d', '%m/%d/%Y']
-
 # create the URL with the date of yesterday
 url = f'https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?date_received_max={yesterday_str}&date_received_min=2011-12-01&field=all&format=csv&lens=product&no_aggs=true&product=Mortgage&size=375533&sub_lens=sub_product&trend_depth=5&trend_interval=month'
 
