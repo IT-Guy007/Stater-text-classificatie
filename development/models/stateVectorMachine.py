@@ -19,11 +19,7 @@ vectorizer = TfidfVectorizer(
     stop_words="english",
     token_pattern=r'\b[a-zA-Z]+\b',
     analyzer="word",
-    use_idf=True,
-    smooth_idf=True,
-    norm=None,
-    tokenizer=None,
-    preprocessor=None
+    use_idf=True
 )
 
 # Vectorize data
