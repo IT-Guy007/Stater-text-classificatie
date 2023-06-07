@@ -45,19 +45,11 @@ rf_model.fit(X_train, y_train)
 # Predict the target variable for the testing data
 y_pred = rf_model.predict(X_test)
 
-custom_text = "My mortgage was sold to Roundpoint company in XX/XX/2023. I got a letter in XXXX from my prior lender, XXXX XXXX stating this was to occur and the next payment to be made would go to Roundpoint. X..."
-custom_text_bow = vectorizer.transform([custom_text])
+def text_to_prediction_random_forest(text):
+    custom_text_bow = vectorizer.transform([text])
+    predicted_issue = rf_model.predict(custom_text_bow)
 
-# Predict the issue for the custom text data
-predicted_issue = rf_model.predict(custom_text_bow)
-
-y_pred = rf_model.predict(X_test)
-
-# Create a classification report
-report = classification_report(y_test, y_pred, output_dict=True)
-
-# Convert the report to a DataFrame
-df = pd.DataFrame(report).transpose()
+    return predicted_issue
 
 # Define your features and target
 X = data['Consumer complaint narrative']  # text_column is the name of the column in your dataset that contains the text data
