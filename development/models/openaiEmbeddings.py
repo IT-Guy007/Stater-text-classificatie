@@ -7,11 +7,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-# Setup openAI and constants
-openai.api_key = "<api-key>"
+# Setup openAI API key
+openai.api_key = '<api_key>'
 
 # OpenAI model for embedding complaints: text-embedding-ada-002
-embedding_model = "text-embedding-ada-002"
+embedding_model = 'text-embedding-ada-002'
 
 # Retrieve the data from the database
 input_datapath = pd.read_csv('StaterData.csv')
@@ -20,20 +20,18 @@ input_datapath = pd.read_csv('StaterData.csv')
 data = input_datapath.loc[:200]
 
 # Create and return embedding
-def get_embedding(text, model="text-embedding-ada-002"):
+def get_embedding(text, model='text-embedding-ada-002'):
     # sleep 1 second to prevent reaching rate limit. Limit: 60 requests per min.
     time.sleep(1)
     text = text.replace("\n", " ")
     return openai.Embedding.create(input = [text], model=model)['data'][0]['embedding']
 
-data['Embedding'] = data['Consumer complaint narrative'].apply(lambda x: get_embedding(x))
+data['Embedding'] = data['Clean consumer complaint'].apply(lambda x: get_embedding(x))
 data.to_csv("StaterDataEmbeddings.csv", index=False)
 
-data = pd.read_csv("dataPreparation/StaterDataEmbeddings.csv")
-
 # Prepare the feature matrix X and target vector y
-X = data["Embedding"].apply(lambda x: json.loads(x)).tolist()
-y = data["Issue"]
+X = data['Embedding'].apply(lambda x: json.loads(x)).tolist()
+y = data['Issue']
 
 # Reshape the embeddings into a 2D array
 X = np.array(X)
@@ -52,4 +50,4 @@ y_pred = rf_classifier.predict(X_test)
 
 # Evaluate the performance of the model
 accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
+print('Accuracy:', accuracy)
