@@ -149,29 +149,29 @@ print('Accuracy:', accuracy)
 f1score = f1_score(y_test, y_pred, average='macro')
 print('F1 score:', f1score)
 
-# Define the parameter grid to search over
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [10, 20, 30, None],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-}
-
-# Create a Random Forest model
-rf_model = RandomForestClassifier(random_state=2)
-
-# Create a GridSearchCV object
-grid_search = GridSearchCV(
-    estimator=rf_model,
-    param_grid=param_grid,
-    cv=5,  # number of folds for cross-validation
-    scoring='accuracy',
-    # n_jobs=-1,  # use all available CPU cores
-)
-
-# Fit the grid search to the training data
-grid_search.fit(X_train, y_train)
-
-# Print the best hyperparameters and the corresponding F1 score
-print('Best hyperparameters:', grid_search.best_params_)
-print('Best accuracy score:', grid_search.best_score_)
+# # Define the parameter grid to search over
+# param_grid = {
+#     'n_estimators': [50, 100, 200],
+#     'max_depth': [10, 20, 30, None],
+#     'min_samples_split': [2, 5, 10],
+#     'min_samples_leaf': [1, 2, 4],
+# }
+#
+# # Create a Random Forest model
+# rf_model = RandomForestClassifier(random_state=2)
+#
+# # Create a GridSearchCV object
+# grid_search = GridSearchCV(
+#     estimator=rf_model,
+#     param_grid=param_grid,
+#     cv=5,  # number of folds for cross-validation
+#     scoring='accuracy',
+#     # n_jobs=-1,  # use all available CPU cores
+# )
+#
+# # Fit the grid search to the training data
+# grid_search.fit(X_train, y_train)
+# 
+# # Print the best hyperparameters and the corresponding F1 score
+# print('Best hyperparameters:', grid_search.best_params_)
+# print('Best accuracy score:', grid_search.best_score_)
