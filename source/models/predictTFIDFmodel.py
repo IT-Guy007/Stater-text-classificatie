@@ -31,7 +31,7 @@ dtypes = {
 parse_dates = ['Product', 'Date received', 'Date sent to company']
 
 # Read the CSV file with specified data types and parse dates
-DS1_data = pd.read_csv("Data/TrainData.csv", low_memory=False, dtype=dtypes, parse_dates=parse_dates)
+data = pd.read_csv("../dataPreparation/TrainData.csv", low_memory=False, dtype=dtypes, parse_dates=parse_dates)
 
 # Create a TfidfVectorizer with optimized settings
 vectorizer = TfidfVectorizer(stop_words='english',              # Exclude common English words
@@ -44,7 +44,7 @@ vectorizer = TfidfVectorizer(stop_words='english',              # Exclude common
                              norm='l2')
 
 # Fit and transform the vectorizer to get an score per word in an array returned
-Vectorized_Data = vectorizer.fit_transform(DS1_data['Consumer complaint narrative'])
+Vectorized_Data = vectorizer.fit_transform(data['Consumer complaint narrative'])
 
 feature_names = vectorizer.get_feature_names_out()
 
@@ -52,10 +52,10 @@ feature_names = vectorizer.get_feature_names_out()
 english_vocab = set(w.lower() for w in nltk.corpus.words.words())
 
 # Calculate the normalized count of issue categories
-IssueCountNormalized = DS1_data['Issue'].value_counts(normalize=True)
+IssueCountNormalized = data['Issue'].value_counts(normalize=True)
 
 # Get unique values from the "Issue" column
-unique_issues = DS1_data['Issue'].unique()
+unique_issues = data['Issue'].unique()
 
 # Concatenate the unique issues into a single string
 all_issues = ' '.join(unique_issues)
@@ -69,7 +69,7 @@ Mortgage_Terms = set(all_words)
 # Function creates an array of every word in text and gives it an score
 def tfidf_custom_scoring(input_text):
     # Fit the data to the vectorizer
-    vectorizer.fit(DS1_data['Consumer complaint narrative'])
+    vectorizer.fit(data['Consumer complaint narrative'])
 
     # Adds the input from the user to the fit using an transform
     transformed_data = vectorizer.transform([input_text])
@@ -95,8 +95,7 @@ def tfidf_custom_scoring(input_text):
     # return a tuple of the feature names and adjusted scores
     return feature_names, adjusted_scores
 
-#user_input = input("What question do you want to categorize? ")
-def Classifiy_string(user_input):
+def classifiyComplaintTFIDF(user_input):
     # Get an array of words with corresponding scores
     data = tfidf_custom_scoring(user_input)
 
@@ -140,7 +139,7 @@ def Classifiy_string(user_input):
 
     # Check all past result classifications
     def check_corresponding_word(relevant_word):
-        return DS1_data[(DS1_data["top_word"].str[0] == relevant_word[0]) & DS1_data["top_word"].str[1].isin(relevant_word)]
+        return data[(data["top_word"].str[0] == relevant_word[0]) & data["top_word"].str[1].isin(relevant_word)]
 
     filtered_df = check_corresponding_word(Top3Words)
 
@@ -165,4 +164,4 @@ def Classifiy_string(user_input):
     # Return the value in the 'IssueName' column of the row with the highest 'Endscores' value
     return Toprow.IssueName
 
-print("Your question will be in the following category: "+Classifiy_string(input("What question do you want to categorize? ")))
+print("Your question will be in the following category: "+classifiyComplaintTFIDF(input("What question do you want to categorize? ")))
