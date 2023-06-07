@@ -9,14 +9,12 @@ from sklearn.model_selection import train_test_split
 
 # Setup openAI and constants
 openai.api_key = "<api-key>"
-select_query = "SELECT * FROM 'mortgage complaints'"
-db = "sqlite:///StaterData.db"
 
 # OpenAI model for embedding complaints: text-embedding-ada-002
 embedding_model = "text-embedding-ada-002"
 
 # Retrieve the data from the database
-input_datapath = pd.read_sql_query(select_query, db)
+input_datapath = pd.read_csv('StaterData.csv')
 
 # Limit test size due to performance issues
 data = input_datapath.loc[:200]

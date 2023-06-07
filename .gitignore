@@ -164,3 +164,4 @@ development/models/StaterData.db
 development/dataPreparation/StaterData.db
 development/models/StaterData.csv
 development/dataPreparation/StaterData.csv
+development/models/StaterDataEmbeddings.csv
