@@ -24,4 +24,4 @@ Het volgende is aangepast:
 ### Project Management
 * [ ] In Jira staat de job story als completed.
 * [ ] Random state 2 gebruiken bij de code.
-* [ ] Een conclusie is geschreven bij de jobstory in een markdown cell.
+* [] Een conclusie is geschreven bij de jobstory in een markdown cell.
