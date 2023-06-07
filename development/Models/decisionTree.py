@@ -47,3 +47,9 @@ y_pred = model.predict(X_test)
 # Evaluate the accuracy of the model
 accuracy = accuracy_score(y_test, y_pred)
 print('Accuracy:', accuracy)
+
+# function to classify a complaint
+def questionDecisionTree(text):
+    question_decisionTree = vectorizer.transform([text])
+    prediction = model.predict(question_decisionTree)
+    return prediction[0]
