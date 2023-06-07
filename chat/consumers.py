@@ -42,15 +42,15 @@ class ChatConsumer(WebsocketConsumer):
             prediction = text_to_prediction_random_forest(translation)
             pass
         elif "tfidf" in text_data_json["text"].lower() or 'tf-idf' in text_data_json["text"].lower() or 'tf idf' in text_data_json["text"].lower():
-            # classify using random forest
+            # classify using random tfidf
             prediction = classifiyComplaintTFIDF(translation)
             pass
         elif "logistic regression" in text_data_json["text"].lower() or 'logisticregression' in text_data_json["text"].lower():
-            # classify using random forest
+            # classify using random logistic regression
             prediction = ask_question(translation)
             pass
         elif "decision tree" in text_data_json["text"].lower() or 'decisiontree' in text_data_json["text"].lower():
-            # classify using random forest
+            # classify using random decision tree
             prediction = questionDecisionTree(translation)
             pass
 
