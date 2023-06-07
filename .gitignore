@@ -144,10 +144,8 @@ cython_debug/
 .idea/
 .DS_Store
 development/StaterData.db
-words.vector.gz.dwicw2hw.tmp
-development/dataPreparation/StaterData.db
-development/dataPreparation/StaterData.csv
-development/StaterData.db
-development/models/StaterData.csv'
 development/models/StaterData.db
 development/models/StaterData.csv
+development/models/StaterDataEmbeddings.csv
+development/dataPreparation/StaterData.db
+development/dataPreparation/StaterData.csv
