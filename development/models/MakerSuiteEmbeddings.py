@@ -1,7 +1,6 @@
 # Imports
 import google.generativeai as palm
 
-import re
 import tqdm
 import tensorflow as tf
 import keras
@@ -12,7 +11,6 @@ import pandas as pd
 from keras import layers
 from sklearn.model_selection import train_test_split
 from google.api_core import retry
-from tqdm.auto import tqdm
 import sys
 import platform
 
@@ -35,9 +33,6 @@ model = models[0]
 # Import the data, and spit the data
 data = pd.read_csv("StaterData.csv")
 df_train, df_test = train_test_split(data, test_size=0.3, random_state=2)
-
-# Python progress bar 
-tqdm.pandas()
 
 def make_embed_text_fn(model):
   @retry.Retry(timeout=300.0)
