@@ -161,3 +161,6 @@ cython_debug/
 .DS_Store
 development/StaterData.db
 development/models/StaterData.db
+development/dataPreparation/StaterData.db
+development/models/StaterData.csv
+development/dataPreparation/StaterData.csv
