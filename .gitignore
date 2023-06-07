@@ -143,9 +143,12 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 .DS_Store
-development/StaterData.db
-development/models/StaterData.db
-development/models/StaterData.csv
-development/models/StaterDataEmbeddings.csv
-development/dataPreparation/StaterData.db
-development/dataPreparation/StaterData.csv
+source/StaterData.db
+words.vector.gz.dwicw2hw.tmp
+
+source/dataPreparation/StaterData.db
+source/dataPreparation/StaterData.csv
+source/StaterData.db
+source/models/StaterData.csv'
+development/models/predictTFIDFmodel.py
+source/models/predictTFIDFmodel.py
