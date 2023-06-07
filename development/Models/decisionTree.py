@@ -9,7 +9,8 @@ from sklearn.metrics import accuracy_score
 
 
 # Read csv, StaterData
-df = pd.read_csv('/Users/laurensheberle/Github/StaterData.csv')
+
+df = pd.read_csv('StaterData.csv')
 
 # Define your features and target, with x as text_column which contains the complaint in the dataset. And target_column which contains the target variable
 X = df['Clean consumer complaint']  
