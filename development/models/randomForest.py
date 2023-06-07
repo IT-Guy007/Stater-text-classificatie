@@ -16,13 +16,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # Read cleaned dataset
 data = pd.read_sql_query("SELECT * FROM 'mortgage complaints'", "sqlite:///StaterData.db")
 
-# Drop dates for testing purposes
-# data.drop(['Date received', 'Date sent to company'], axis=1)
-
 # Limit test size due to performance issues
 data = data.loc[:1000]
-
-data[['Consumer complaint narrative', 'Issue']].head()
 
 # Define your features and target
 X = data['Consumer complaint narrative']  # text_column is the name of the column in your dataset that contains the text data
@@ -72,20 +67,6 @@ predicted_issue = rf_model.predict(custom_text_bow)
 print('Predicted issue:', predicted_issue)
 
 y_pred = rf_model.predict(X_test)
-
-# generate confusion matrix
-cm = confusion_matrix(y_test, y_pred)
-
-# create labels for xticklabels
-labels = data['Issue'].unique()
-print(labels)
-
-# plot confusion matrix as heatmap
-sns.heatmap(cm, annot=True, cmap="Blues", fmt="d", xticklabels=labels, yticklabels=labels)
-plt.xlabel("Predicted label")
-plt.ylabel("True label")
-plt.title("Confusion Matrix")
-plt.show()
 
 # Create a classification report
 report = classification_report(y_test, y_pred, output_dict=True)
