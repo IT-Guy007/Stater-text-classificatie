@@ -1,16 +1,9 @@
 # Various imports used for notebook
 import pandas as pd
-import seaborn as sns
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.tree import plot_tree
-import matplotlib.pyplot as plt
-import joblib
 from sklearn.metrics import f1_score
-from sklearn.model_selection import GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 # Read cleaned dataset created from complaintCleaner.py

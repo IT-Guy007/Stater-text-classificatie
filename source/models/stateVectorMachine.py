@@ -66,3 +66,8 @@ print(f"Accuracy: {accuracy * 100:.2f}% with({count}k samples)")
 predictions = clf.predict(test_tfidf_vectors)
 report = classification_report(test_labels, predictions, zero_division=1)
 print(report)
+def text_to_prediction_svm(text):
+    custom_text_bow = vectorizer.transform([text])
+    predicted_issue = clf.predict(custom_text_bow)
+
+    return predicted_issue

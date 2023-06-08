@@ -8,11 +8,11 @@ import nltk
 nltk.download('words')
 from googletrans import Translator
 
-from source.models.predictTFIDFmodel import classifiyComplaintTFIDF
+from source.models.TFIDFModelPrediction import classifiyComplaintTFIDF
 from source.models.multinomialLogisticRegression import ask_question
 from source.models.randomForest import text_to_prediction_random_forest
 from source.models.decisionTree import questionDecisionTree
-
+from source.models.stateVectorMachine import text_to_prediction_svm
 # from source.models.openaiEmbeddings import question
 
 class ChatConsumer(WebsocketConsumer):
@@ -52,6 +52,10 @@ class ChatConsumer(WebsocketConsumer):
         elif "decision tree" in text_data_json["text"].lower() or 'decisiontree' in text_data_json["text"].lower():
             # classify using random decision tree
             prediction = questionDecisionTree(translation)
+            pass
+        else:
+            # classify using random svm
+            prediction = text_to_prediction_svm(translation)
             pass
 
         prediction_Translated = Translator.translate("Your question belongs to the: " + prediction + " category",
