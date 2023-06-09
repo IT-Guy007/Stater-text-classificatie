@@ -7,8 +7,8 @@ This is a chatbot designed to classify questions from customers in the mortgage 
 - Decision Tree
 - Random Forest
 - Own Model using TF-IDF
-- Embeddings using PALM AI from BARD
-- Embeddings using ChatGPT
+- Embeddings using PALM AI
+- Embeddings using OpenAI
 
 ## Prerequisites
 
