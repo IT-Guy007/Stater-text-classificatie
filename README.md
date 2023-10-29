@@ -19,7 +19,7 @@ This is a chatbot designed to classify questions from customers in the mortgage 
 1. Clone the repository:
 
 ```bash
-git clone <https://github.com/IT-Guy007/Stater-text-classification.git>
+git clone <https://github.com/IT-Guy007/TF-IDF-vs-Embeddings.git>
 cd mortgage-chatbot
 ```
 
